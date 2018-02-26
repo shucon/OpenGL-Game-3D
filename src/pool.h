@@ -1,13 +1,13 @@
 #include "main.h"
 
-#ifndef BALL_H
-#define BALL_H
+#ifndef POOL_H
+#define POOL_H
 
 
-class Ball {
+class Pool {
 public:
-    Ball() {}
-    Ball(float x, float y, color_t color);
+    Pool() {}
+    Pool(float x, float y, color_t color);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4 VP);
@@ -18,4 +18,4 @@ private:
     VAO *object;
 };
 
-#endif // BALL_H
+#endif // POOL_H

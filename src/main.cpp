@@ -1,6 +1,7 @@
 #include "main.h"
 #include "timer.h"
-#include "ball.h"
+#include "cube.h"
+#include "pool.h"
 
 using namespace std;
 
@@ -12,11 +13,12 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
-Ball ball1;
-
+Cube boat;
+Cube rocks[100];
+Pool pool;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
-float camera_rotation_angle = 0;
-
+float camera_rotation_angle = 90;
+int rockCount = 20;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
@@ -28,11 +30,12 @@ void draw() {
     // use the loaded shader program
     // Don't change unless you know what you are doing
     glUseProgram (programID);
-
+    glEnable ( GL_LIGHTING ) ;
     // Eye - Location of camera. Don't change unless you are sure!!
-    glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
+    glm::vec3 eye ( 0, -5, 2 );
+    // glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
     // Target - Where is the camera looking at.  Don't change unless you are sure!!
-    glm::vec3 target (0, 0, 0);
+    glm::vec3 target (boat.position.x, boat.position.y, boat.position.z);
     // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
     glm::vec3 up (0, 1, 0);
 
@@ -51,19 +54,39 @@ void draw() {
     glm::mat4 MVP;  // MVP = Projection * View * Model
 
     // Scene render
-    ball1.draw(VP);
+    // pool.draw(VP);
+    // for(int i = 0 ; i < rockCount ; i++){
+    //     rocks[i].draw(VP);
+    // }    
+    boat.draw(VP);
 }
 
 void tick_input(GLFWwindow *window) {
     int left  = glfwGetKey(window, GLFW_KEY_LEFT);
     int right = glfwGetKey(window, GLFW_KEY_RIGHT);
+    int up = glfwGetKey(window, GLFW_KEY_UP);
+    int down = glfwGetKey(window, GLFW_KEY_DOWN);
     if (left) {
-        // Do something
+        boat.position.x -= boat.speed;
+        pool.position.x = boat.position.x;
+    }
+    if (right) {
+        boat.position.x += boat.speed;
+        pool.position.x = boat.position.x;        
+    }
+    if (up) {
+        boat.position.y += boat.speed;
+        pool.position.y = boat.position.y;        
+    }
+    if (down) {
+        boat.position.y -= boat.speed;
+        pool.position.y = boat.position.y;        
     }
 }
 
 void tick_elements() {
-    ball1.tick();
+    boat.tick();
+    // printf("%lf  %lf  %lf",boat.position.x,boat.position.y,boat.position.z);
     camera_rotation_angle += 1;
 }
 
@@ -73,8 +96,15 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    ball1       = Ball(0, 0, COLOR_RED);
-
+    boat = Cube(0, 0, COLOR_RED);
+    boat.position.z += 0.5;
+    pool = Pool(0,0, COLOR_BLUE);
+    boat.position.z -= 100;
+    for (int i = 0 ; i < rockCount ; i++) {
+        float x = (((i+1)*rand()+i*584)%10000)/1000;  
+        float y = (((i+1)*rand()+i*784)%10000)/1000;
+        rocks[i] = Cube(x , y, COLOR_BLACK);
+    }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
@@ -134,9 +164,9 @@ bool detect_collision(bounding_box_t a, bounding_box_t b) {
 }
 
 void reset_screen() {
-    float top    = screen_center_y + 4 / screen_zoom;
-    float bottom = screen_center_y - 4 / screen_zoom;
-    float left   = screen_center_x - 4 / screen_zoom;
-    float right  = screen_center_x + 4 / screen_zoom;
+    float top    = screen_center_y + 10 / screen_zoom;
+    float bottom = screen_center_y - 10 / screen_zoom;
+    float left   = screen_center_x - 10 / screen_zoom;
+    float right  = screen_center_x + 10 / screen_zoom;
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);
 }
