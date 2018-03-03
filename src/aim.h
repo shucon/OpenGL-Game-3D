@@ -1,15 +1,16 @@
 #include "main.h"
 
-#ifndef CUBE_H
-#define CUBE_H
+#ifndef AIM_H
+#define AIM_H
 
 
-class Cube {
+class Aim {
 public:
-    Cube() {}
-    Cube(float x, float y, color_t color);
+    Aim() {}
+    Aim(float x, float y, color_t color);
     glm::vec3 position;
-    float rotation;
+    float rotation_z;
+    float rotation_h;
     float launch_speed;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);

@@ -13,6 +13,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+void heli_camera(float x, float y);
+void cannon_pos(float x, float y);
 
 struct color_t {
     int r;
@@ -33,6 +35,7 @@ void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods);
 void keyboardChar(GLFWwindow *window, unsigned int key);
 void mouseButton(GLFWwindow *window, int button, int action, int mods);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
 // other_handlers.cpp
 void error_callback(int error, const char *description);
@@ -82,5 +85,15 @@ extern const color_t COLOR_GREEN;
 extern const color_t COLOR_BLACK;
 extern const color_t COLOR_BACKGROUND;
 extern const color_t COLOR_BLUE;
+extern const color_t COLOR_CUBE1;
+extern const color_t COLOR_CUBE2;
+extern const color_t COLOR_CUBE3;
+extern const color_t COLOR_CUBE4;
+extern const color_t COLOR_CUBE5;
+extern const color_t COLOR_CUBE6;
+extern const color_t COLOR_CUBE7;
+extern const color_t COLOR_CUBE8;
+extern const color_t COLOR_CUBE9;
+extern const color_t COLOR_BLAST;
 
 #endif

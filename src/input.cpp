@@ -25,19 +25,7 @@ void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods) {
     // Function is called first on GLFW_PRESS.
 
     if (action == GLFW_RELEASE) {
-        // switch (key) {
-        // case GLFW_KEY_C:
-        // rectangle_rot_status = !rectangle_rot_status;
-        // break;
-        // case GLFW_KEY_P:
-        // triangle_rot_status = !triangle_rot_status;
-        // break;
-        // case GLFW_KEY_X:
-        //// do something ..
-        // break;
-        // default:
-        // break;
-        // }
+
     } else if (action == GLFW_PRESS) {
         switch (key) {
         case GLFW_KEY_ESCAPE:
@@ -84,4 +72,10 @@ void mouseButton(GLFWwindow *window, int button, int action, int mods) {
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     // Do something
+}
+
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+    printf("xpos=%f ypos=%f\n",xpos, ypos);
+    heli_camera(xpos, ypos);
+    cannon_pos(xpos , ypos);
 }
