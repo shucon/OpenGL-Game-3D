@@ -14,6 +14,7 @@ public:
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     void tick();
+    bounding_box_t bounding_box();
     double speed;
 private:
     VAO *object;
@@ -25,6 +26,7 @@ private:
     VAO *object6;
     VAO *object7;
     VAO *object8;
+    VAO *object9;
 };
 
 #endif // CUBE_H

@@ -70,6 +70,7 @@ Cube::Cube(float x, float y, color_t color) {
     this->object6 = create3DObject(GL_TRIANGLES, 3, vertex_buffer_data+99, COLOR_CUBE7, GL_FILL);
     this->object7 = create3DObject(GL_TRIANGLES, 3, vertex_buffer_data+108, COLOR_CUBE8, GL_FILL);
     this->object8 = create3DObject(GL_TRIANGLES, 3, vertex_buffer_data+117, COLOR_CUBE9, GL_FILL);
+    this->object9 = create3DObject(GL_TRIANGLES, 3, vertex_buffer_data+126, COLOR_RED, GL_FILL);
         
 }
 
@@ -91,6 +92,7 @@ void Cube::draw(glm::mat4 VP) {
     draw3DObject(this->object6);
     draw3DObject(this->object7);
     draw3DObject(this->object8);
+    draw3DObject(this->object9);
 }
 
 void Cube::set_position(float x, float y) {
@@ -103,3 +105,8 @@ void Cube::tick() {
     // this->position.y -= speed;
 }
 
+bounding_box_t Cube::bounding_box() {
+    float x = this->position.x, y = this->position.y;
+    bounding_box_t bbox = { x, y, 9, 9};
+    return bbox;
+}

@@ -22,7 +22,7 @@ Rock cannon,blast;
 Aim aim;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0 , gravity = 0.5 ,level = 3,pi=3.141;
 float camera_x=0,camera_y=90,camera_z=100,target_x=0,target_y=90,target_z=0;
-int rockCount = 100,view = 1, time_cnt = 0;
+int rockCount = 100,view = 1, time_cnt = 0, time_blast = 0;
 Timer t60(1.0 / 60);
 void change_camera();
 void speed_camera();
@@ -65,7 +65,7 @@ void draw() {
     boat.draw(VP);
     cannon.draw(VP);
     aim.draw(VP);
-    // blast.draw(VP);
+    blast.draw(VP);
 }
 
 void tick_input(GLFWwindow *window) {
@@ -78,45 +78,91 @@ void tick_input(GLFWwindow *window) {
     int camera = glfwGetKey(window, GLFW_KEY_C);
 
     if (left) {
-        boat.rotation += 5;
-        cannon.rotation += 5;
-        aim.rotation_z += 5;
+        int flag = 0;
+        for (int i = 0 ; i < rockCount ; i++) {
+            if (detect_collision(boat.bounding_box(),rocks[i].bounding_box()) && rocks[i].position.z != -1000) {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 0) {
+            boat.rotation += 5;
+            cannon.rotation += 5;
+            aim.rotation_z += 5;
+        }
         // pool.position.x = boat.position.x;
     }
     if (right) {
-        boat.rotation -= 5;
-        cannon.rotation -= 5;
-        aim.rotation_z -= 5;
+        int flag = 0;
+        for (int i = 0 ; i < rockCount ; i++) {
+            if (detect_collision(boat.bounding_box(),rocks[i].bounding_box()) && rocks[i].position.z != -1000) {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 0) {
+            boat.rotation -= 5;
+            cannon.rotation -= 5;
+            aim.rotation_z -= 5;
+        }
         // pool.position.x = boat.position.x;        
     }
     if (up) {
         boat.position.y += boat.speed*cos(boat.rotation*M_PI/180.0f);
         boat.position.x -= boat.speed*sin(boat.rotation*M_PI/180.0f);
-        pool.position.y = boat.position.y;
-        if (cannon.position.z == level) {
-            cannon.position.x = boat.position.x;        
-            cannon.position.y = boat.position.y;        
+        int flag = 0;
+        for (int i = 0 ; i < rockCount ; i++) {
+            if (detect_collision(boat.bounding_box(),rocks[i].bounding_box()) && rocks[i].position.z != -1000) {
+                flag = 1;
+                break;
+            }
         }
-        aim.position.y = boat.position.y;        
-        aim.position.x = boat.position.x;        
+        if (flag == 0) {
+            pool.position.y = boat.position.y;
+            if (cannon.position.z == boat.position.z) {
+                cannon.position.x = boat.position.x;        
+                cannon.position.y = boat.position.y;        
+            }
+            aim.position.y = boat.position.y;        
+            aim.position.x = boat.position.x;
+        }
+        else {
+            boat.position.y -= boat.speed*cos(boat.rotation*M_PI/180.0f);
+            boat.position.x += boat.speed*sin(boat.rotation*M_PI/180.0f);
+        }
+
+                
     }
     if (down) {
         boat.position.y -= boat.speed*cos(boat.rotation*M_PI/180.0f);
         boat.position.x += boat.speed*sin(boat.rotation*M_PI/180.0f);
-        pool.position.y = boat.position.y;        
-        if (cannon.position.z == level) {
-            cannon.position.x = boat.position.x;        
-            cannon.position.y = boat.position.y;        
+        int flag = 0;
+        for (int i = 0 ; i < rockCount ; i++) {
+            if (detect_collision(boat.bounding_box(),rocks[i].bounding_box()) && rocks[i].position.z != -1000) {
+                flag = 1;
+                break;
+            }
         }
-        aim.position.y = boat.position.y;        
-        aim.position.x = boat.position.x;        
+        if (flag == 0) {
+            pool.position.y = boat.position.y;
+            if (cannon.position.z == boat.position.z) {
+                cannon.position.x = boat.position.x;        
+                cannon.position.y = boat.position.y;        
+            }
+            aim.position.y = boat.position.y;        
+            aim.position.x = boat.position.x;
+        }
+        else {
+            boat.position.y += boat.speed*cos(boat.rotation*M_PI/180.0f);
+            boat.position.x -= boat.speed*sin(boat.rotation*M_PI/180.0f);
+        }       
 }
     if (jump && boat.position.z == level) {
         boat.launch_speed = 6;
-        cannon.launch_speed = 6;
+        cannon.launch_speed =  6;
         aim.launch_speed = 6;
     }
-    if (fire && cannon.position.z == boat.position.z && aim.rotation_h > 10) {
+    if (fire && cannon.position.z == boat.position.z && aim.rotation_h > 3 && time_blast == 0) {
         cannon.launch_speed = 10 * sin(aim.rotation_h*M_PI/180);
         cannon.launch_speed_x = -10 * cos(aim.rotation_h*M_PI/180) * sin(aim.rotation_z*M_PI/180);
         cannon.launch_speed_y = 10 * cos(aim.rotation_h*M_PI/180) * cos(aim.rotation_z*M_PI/180);
@@ -153,12 +199,33 @@ void tick_elements() {
         cannon.launch_speed = 0;
         cannon.launch_speed_x = 0;
         cannon.launch_speed_y = 0;
+        if (cannon.position.x != boat.position.x && cannon.position.y != boat.position.y) {
+            blast.position.y = cannon.position.y;
+            blast.position.x = cannon.position.x;
+            time_blast = 1;
+        }
         cannon.position.z = level;
         cannon.position.x = boat.position.x;
         cannon.position.y = boat.position.y;
     }
     speed_camera();
     time_cnt ++;
+    
+    if (time_blast > 60) {
+        time_blast = 0;
+        blast.size = 25;
+        blast.position.x = -1000;
+        blast.position.y = -1000;
+    }
+    for (int i = 0 ; i < rockCount ; i++) {
+        if(detect_collision(blast.bounding_box(),rocks[i].bounding_box())) {
+            rocks[i].position.z = -1000;
+        }
+    }
+    if (time_blast > 0)  {
+        time_blast ++;
+        blast.size -= 0.35;
+    }
 }
 
 /* Initialize the OpenGL rendering properties */
@@ -181,8 +248,8 @@ void initGL(GLFWwindow *window, int width, int height) {
     aim = Aim(0, 0, COLOR_RED);
     aim.position.z += level;
     cannon = Rock(boat.position.x,boat.position.y,COLOR_RED);
-    blast = Rock(-1,-1,COLOR_BLAST);
-    blast.size = 15;
+    blast = Rock(-1000,-1000,COLOR_BLAST);
+    blast.size = 25;
     cannon.position.z += level;
     blast.position.z -= blast.size/2;
     // Create and compile our GLSL program from the shaders
@@ -239,8 +306,7 @@ int main(int argc, char **argv) {
 }
 
 bool detect_collision(bounding_box_t a, bounding_box_t b) {
-    return (abs(a.x - b.x) * 2 < (a.width + b.width)) &&
-           (abs(a.y - b.y) * 2 < (a.height + b.height));
+    return (sqrt(pow(a.x-b.x,2)+pow(a.y-b.y,2)) < (a.width+b.width));
 }
 
 void reset_screen() {
@@ -289,7 +355,7 @@ void speed_camera(){
     else if(view==2){ //top-view
         camera_x = boat.position.x+1;
         camera_y = boat.position.y;
-        camera_z = boat.position.z+100;
+        camera_z = boat.position.z+300;
 
         target_x = boat.position.x;
         target_y = boat.position.y;

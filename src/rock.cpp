@@ -73,3 +73,9 @@ void Rock::tick() {
     // this->position.x -= speed;
     // this->position.y -= speed;
 }
+
+bounding_box_t Rock::bounding_box() {
+    float x = this->position.x, y = this->position.y;
+    bounding_box_t bbox = { x, y, this->size, this->size };
+    return bbox;
+}
