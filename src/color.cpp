@@ -15,3 +15,4 @@ const color_t COLOR_CUBE7 = { 0, 153, 204 };
 const color_t COLOR_CUBE8 = { 51, 153, 102 };
 const color_t COLOR_CUBE9 = { 135, 211, 124 };
 const color_t COLOR_BLAST = { 255, 12, 1 };
+const color_t COLOR_BROWN = { 102, 34, 0 };

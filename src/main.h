@@ -95,5 +95,6 @@ extern const color_t COLOR_CUBE7;
 extern const color_t COLOR_CUBE8;
 extern const color_t COLOR_CUBE9;
 extern const color_t COLOR_BLAST;
+extern const color_t COLOR_BROWN;
 
 #endif
