@@ -26,6 +26,7 @@ Aim aim;
 Sail sail;
 Monster monster[100];
 Rock gift;
+Rock present[50];
 Barrel barrel[100];
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0 , gravity = 0.5 ,level = 3,pi=3.141;
 float camera_x=0,camera_y=90,camera_z=100,target_x=0,target_y=90,target_z=0,health = 3,wind_rotation=0;
@@ -71,8 +72,14 @@ void draw() {
     for(int i = 0 ; i < rockCount ; i++){
         rocks[i].draw(VP);
     }  
+    for(int i = 0 ; i < 50 ; i++){
+        present[i].draw(VP);
+    }
     for(int i = 0 ; i < monsterCount ; i++){
-        monster[i].draw(VP);
+        if (i%10 != 0)
+            monster[i].draw(VP);
+        else if(score > 7)
+            monster[i].draw(VP);
     }    
     boat.draw(VP);
     cannon.draw(VP);
@@ -263,7 +270,7 @@ void tick_input(GLFWwindow *window) {
         else {
             sail.position.z = level;
             if (wind)
-                boat.speed = 4;
+                boat.speed = 3;
         }
         time_cnt = 0;
     }
@@ -275,10 +282,9 @@ void tick_elements() {
     }
     if (wind_cnt%600 == 0) {
             if (boat.speed == 2) {
-                boat.speed = 4;
+                boat.speed = 3;
                 wind = 1;
                 wind_rotation = rand()%180;
-                boat.rotation = wind_rotation;
             }
             else {
                 boat.speed = 2;
@@ -426,6 +432,19 @@ void tick_elements() {
     if (health <= 0) {
         quit(window);
     }
+    for(int i = 0 ; i < 50 ; i++){
+        if(detect_collision(boat.bounding_box(),present[i].bounding_box()) && present[i].position.z != -1000){ 
+        if (i%2 == 0) {
+present[i].position.z = -1000;
+            health++;
+
+        }
+                    else{
+            present[i].position.z = -1000;
+            score++;}
+        }
+        present[i].rotation += 5;
+    } 
     wind_cnt++;
 }
 
@@ -481,6 +500,16 @@ void initGL(GLFWwindow *window, int width, int height) {
         barrel[i] = Barrel(x ,y , COLOR_BROWN);
         barrel[i].position.z += level;
     }
+    for(int i = 0 ; i < 50 ; i++){
+        float x = ((((i+1)*rand()+i*584)%10000)/10) + 30;  
+        float y = ((((i+1)*rand()+i*784)%10000)/10) + 30;
+        if (i%2 == 0)
+            present[i] = Rock(x , y, COLOR_CUBE5);
+        else
+            present[i] = Rock(x , y, COLOR_CUBE6);
+        present[i].size = 8;
+        present[i].position.z += level;
+    }  
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
