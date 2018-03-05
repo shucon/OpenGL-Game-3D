@@ -5,18 +5,14 @@
 
 Barrel::Barrel(float x, float y, color_t color) {
     this->position = glm::vec3(x, y, 0);
-    this->size = size;
-    //rotation = 20;
-    // ngift = -1;
-    // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
-    // A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
+    this->size = 10;
     int pos=0,i,k,n=100;
     float j=0;
 
     GLfloat vertex_buffer_data[180*n+18];
     GLfloat g_vertex_buffer_data[180*n];
     float pi = 3.14159, angle = 0, theta=(2*pi)/n;
-    for(j=0;j<4;j+=0.2){
+    for(j=0;j<2;j+=0.1){
         for(i=0;i<n;i++){
             g_vertex_buffer_data[pos++]= 10*j;
             g_vertex_buffer_data[pos++]= 0.0f;
@@ -33,13 +29,13 @@ Barrel::Barrel(float x, float y, color_t color) {
     }
 
     static const GLfloat l_vertex_buffer_data[] = {
-        0.0,-1*this->size, 0.0,
-       38.0,   this->size, 0.0,
-       38.0,-1*this->size, 0.0,
+        0.0,0.0,-1*this->size, 
+       19.0,0.0,   this->size, 
+       19.0,0.0,-1*this->size, 
 
-        0.0,-1*this->size, 0.0,
-       38.0,   this->size, 0.0,
-        0.0,   this->size, 0.0
+        0.0,0.0,-1*this->size,
+       19.0,0.0,   this->size,
+        0.0,0.0,   this->size,
     };
 
     for(i=0;i<180*n+18;i++){
@@ -66,4 +62,10 @@ void Barrel::draw(glm::mat4 VP) {
 
 void Barrel::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
+}
+
+bounding_box_t Barrel::bounding_box() {
+    float x = this->position.x, y = this->position.y;
+    bounding_box_t bbox = { x, y, 9, 9};
+    return bbox;
 }

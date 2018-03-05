@@ -13,7 +13,12 @@ public:
     float launch_speed;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
+    float angular_speed;
+    float speed_y;
+    float level_angle;
+    float acceleration_y;
     void tick();
+    void shm();
     bounding_box_t bounding_box();
     double speed;
 private:

@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 void heli_camera(float x, float y);
 void cannon_pos(float x, float y);
+void zoom_camera(int type);
 
 struct color_t {
     int r;
@@ -96,5 +97,10 @@ extern const color_t COLOR_CUBE8;
 extern const color_t COLOR_CUBE9;
 extern const color_t COLOR_BLAST;
 extern const color_t COLOR_BROWN;
+
+// Audio
+void audio_init();
+void audio_play();
+void audio_close();
 
 #endif

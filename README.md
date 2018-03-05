@@ -1,11 +1,14 @@
-Graphics Boilerplate Code
-=========================
+OpenGL Assignment
 
-This is boilerplate code for the assignments which might be helpful.
+Installation Instructions
 
+sudo apt install libglew-dev libglfw3-dev libglm-dev cmake pkg-config
+Download QtCreator
+Make and Run :)
 
-License
--------
-The MIT License https://meghprkh.mit-license.org/
+Controls
 
-Copyright &copy; 2018 Megh Parikh <meghprkh@gmail.com>
+Use Left arrow key to move left, Use Right arrow key to move right, Use Up arrow key to move forward, Use down arrow key to move backward.
+Use f to fire cannon and mouse to aim, c for camera views , s to change sail.
+
+Scroll works on top-view mode.
