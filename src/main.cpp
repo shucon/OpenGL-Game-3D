@@ -278,7 +278,10 @@ void tick_input(GLFWwindow *window) {
 
 void tick_elements() {
     if (sail.position.z != -1000 && wind == 1) {
-        boat.rotation = wind_rotation;
+        if (boat.rotation != wind_rotation && boat.rotation < wind_rotation)
+            boat.rotation += 1;
+        if (boat.rotation != wind_rotation && boat.rotation > wind_rotation)
+            boat.rotation -= 1;
     }
     if (wind_cnt%600 == 0) {
             if (boat.speed == 2) {
@@ -459,16 +462,20 @@ void initGL(GLFWwindow *window, int width, int height) {
     pool = Pool(0,0, COLOR_BLUE);
     pool.position.z -= 32767;
     for (int i = 0 ; i < rockCount ; i++) {
-        float x = ((((i+1)*rand()+i*584)%10000)/10) + 30;  
-        float y = ((((i+1)*rand()+i*784)%10000)/10) + 30;
+        float x = 0,y = 0;
+        while (abs(x) < 5 || abs(y) < 5) {
+        x = ((((i+1)*rand()+i*584)%10000)/10);  
+        y = ((((i+1)*rand()+i*784)%10000)/10);}
         rocks[i] = Rock(x , y, COLOR_BLACK);
         rocks[i].position.z += 1;
         rocks[i].size = i%5 * 5;
     }
     
     for (int i = 0 ; i < monsterCount ; i++) {
-        float x = ((((i+1)*rand()+i*584)%10000)/10) + 50;  
-        float y = ((((i+1)*rand()+i*784)%10000)/10) + 50;
+        float x = 0,y = 0;
+        while (abs(x) < 5 || abs(y) < 5) {
+            x = ((((i+1)*rand()+i*584)%10000)/10);  
+            y = ((((i+1)*rand()+i*784)%10000)/10);}
         if (i%3 == 0)
             monster[i] = Monster(x , y, COLOR_CUBE1);
         if (i%3 == 1)

@@ -12,3 +12,6 @@ Use Left arrow key to move left, Use Right arrow key to move right, Use Up arrow
 Use f to fire cannon and mouse to aim, c for camera views , s to change sail.
 
 Scroll works on top-view mode.
+
+
+Monster Boss appears if score is greater than 7
