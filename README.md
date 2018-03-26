@@ -2,7 +2,8 @@ OpenGL Assignment
 
 Installation Instructions
 
-sudo apt install libglew-dev libglfw3-dev libglm-dev cmake pkg-config
+`sudo apt install libglew-dev libglfw3-dev libglm-dev cmake pkg-config`
+
 Download QtCreator
 Make and Run :)
 
